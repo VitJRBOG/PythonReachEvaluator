@@ -15,6 +15,9 @@ class Day:
     def set_day_week(self, day_week):
         self.day_week = day_week
 
+    def set_coverage(self, coverage):
+        self.coverage = coverage
+
     def get_day_number(self):
         return self.day_number
 
@@ -24,10 +27,14 @@ class Day:
     def get_day_week(self):
         return self.day_week
 
+    def get_coverage(self):
+        return self.coverage
+
     def __init__(self):
         self.day_number = 0
         self.month_number = 0
         self.day_week = "none"
+        self.coverage = []
 
 
 def main_menu():
