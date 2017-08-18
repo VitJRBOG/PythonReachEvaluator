@@ -114,44 +114,135 @@ def main_menu():
 
 
 def add_menu():
+
+    def enter_date(obj_day):
+        print("COMPUTER [.. -> New data]: " +
+              "Enter numbers of day and month, and name of day week.")
+
+        try:
+            user_answer = raw_input("USER [.. -> New data -> " +
+                                    "Day number]: ")
+            obj_day.set_day_number = int(user_answer)
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> New data -> Day number]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
+        try:
+            user_answer = raw_input("USER [.. -> New data -> " +
+                                    "Number of month]: ")
+            obj_day.set_month_number = int(user_answer)
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> New data -> Number of month]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
+        try:
+            user_answer = raw_input("USER [.. -> New data -> Day week]: ")
+            obj_day.set_day_week = user_answer
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> New data -> Day week]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
+        return obj_day
+
+    def check_intervals(obj_day, loads_json):
+
+        try:
+            amount_intervals = len(loads_json)
+
+            i = 0
+            while i < amount_intervals:
+                interval = loads_json[str(i)]
+                loads_json[str(i)] = posts_amount(interval)
+                i += 1
+
+            obj_day.set_coverage(loads_json)
+            return obj_day
+
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> New data -> Check intervals]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
+    def posts_amount(interval):
+
+        try:
+            user_answer = raw_input("USER [.. -> Posts amount -> " +
+                                    str(interval["time"]) +
+                                    "]: (1-50/00) ")
+
+            if user_answer == "00":
+                print("COMPUTER [.. -> New data -> Posts amount]: Abort. " +
+                      "Return to Main menu...")
+                main_menu()
+            else:
+                if int(user_answer) > 0 and int(user_answer) < 51:
+                    coverage = 0
+                    i = 0
+                    while i < int(user_answer):
+                        coverage = coverage + \
+                            enter_coverage(interval["time"], i + 1)
+                        i += 1
+
+                    interval["value"] = coverage
+                    return interval
+                else:
+                    print("COMPUTER [.. -> New data -> Posts amount]: " +
+                          "Error, check entered data. Retry query...")
+                    return posts_amount(interval)
+
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> New data -> Posts amount]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
+    def enter_coverage(interval_time, post_number):
+
+        try:
+            user_answer = raw_input("USER [.. -> " + str(interval_time) +
+                                    " -> Post coverage №" +
+                                    str(post_number) + "]: ")
+
+            # rounding
+
+            return int(user_answer)
+
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> " + str(var_except) +
+                " -> Post coverage]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
     print("\nCOMPUTER [.. -> New data]: You are in menu of add new data.")
-    print("COMPUTER [.. -> New data]: " +
-          "Enter numbers of day and month, and name of day week.")
 
-    obj_day = Day()
-
-    try:
-        user_answer = raw_input("USER [.. -> New data -> Day number]: ")
-        obj_day.set_day_number = int(user_answer)
-    except Exception as var_except:
-        print(
-            "COMPUTER [.. -> New data -> Day number]: Error, " +
-            str(var_except) +
-            ". Return to Main menu...")
+    if os.path.exists("template.json") is False:
+        print("COMPUTER [.. -> New data]: " +
+              "File \"template.json\" is not exist. Check " +
+              "Menu settings.")
+        print("COMPUTER [.. -> New data]: Return to Main menu...")
         main_menu()
+    else:
+        obj_day = Day()
+        loads_json = read_json("New data", "", "template")
+        obj_day = enter_date(obj_day)
+        obj_day = check_intervals(obj_day, loads_json)
 
-    try:
-        user_answer = raw_input("USER [.. -> New data -> Number of month]: ")
-        obj_day.set_month_number = int(user_answer)
-    except Exception as var_except:
-        print(
-            "COMPUTER [.. -> New data -> Number of month]: Error, " +
-            str(var_except) +
-            ". Return to Main menu...")
-        main_menu()
-
-    try:
-        user_answer = raw_input("USER [.. -> New data -> Day week]: ")
-        obj_day.set_day_week = user_answer
-    except Exception as var_except:
-        print(
-            "COMPUTER [.. -> New data -> Day week]: Error, " +
-            str(var_except) +
-            ". Return to Main menu...")
-        main_menu()
-
-    # read json-file with intervals
-    # function for enter data of reach
+        # func of making loads_json from obj_day
+        # func writing loads_json to json file
 
     # temporary
     print("COMPUTER [.. -> New data]: ...")
