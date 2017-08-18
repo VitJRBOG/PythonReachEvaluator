@@ -155,7 +155,7 @@ def add_menu():
 
     # temporary
     print("COMPUTER [.. -> New data]: ...")
-    print("COMPUTER [.. -> New data]: Here if empty, return to Main menu.")
+    print("COMPUTER [.. -> New data]: Here is empty, return to Main menu.")
     main_menu()
     # temporary
 
@@ -165,7 +165,7 @@ def show_menu():
 
     # temporary
     print("COMPUTER [.. -> Show data]: ...")
-    print("COMPUTER [.. -> Show data]: Here if empty, return to Main menu.")
+    print("COMPUTER [.. -> Show data]: Here is empty, return to Main menu.")
     main_menu()
     # temporary
 
@@ -177,7 +177,7 @@ def settings_menu():
 
     # temporary
     print("COMPUTER [.. -> Settings]: ...")
-    print("COMPUTER [.. -> Settings]: Here if empty, return to Main menu.")
+    print("COMPUTER [.. -> Settings]: Here is empty, return to Main menu.")
     main_menu()
     # temporary
 
@@ -189,7 +189,7 @@ def evaluate_menu():
 
     # temporary
     print("COMPUTER [.. -> Evaluate]: ...")
-    print("COMPUTER [.. -> Evaluate]: Here if empty, return to Main menu.")
+    print("COMPUTER [.. -> Evaluate]: Here is empty, return to Main menu.")
     main_menu()
     # temporary
 
