@@ -42,6 +42,46 @@ class Day:
         self.coverage = []
 
 
+def starter():
+    try:
+        if os.path.exists("output") is False:
+            os.mkdir("output")
+            print("COMPUTER: Was created directory \"output\".")
+
+        if os.path.exists("json") is False:
+            os.mkdir("json")
+            print("COMPUTER: Was created directory \"json\".")
+
+    except Exception as var_except:
+        print(
+            "COMPUTER: Error, " + str(var_except) + ". Exit from program...")
+        exit()
+    main_menu()
+
+
+def read_json(sender, path, file_name):
+    try:
+        loads_json = json.loads(open(str(path) + str(file_name) +
+                                     ".json", 'r').read())  # dict
+
+        return loads_json
+    except Exception as var_except:
+        print(
+            "COMPUTER [.. -> " + str(sender) +
+            " -> Read JSON]: Error, " + str(var_except) +
+            ". Return to Main menu...")
+        main_menu()
+
+
+def write_json(sender):
+    # temporary
+    print("COMPUTER [.. -> " + str(sender) + " -> Write JSON]: ...")
+    print("COMPUTER [.. -> " + str(sender) + " -> Write JSON]: " +
+          "Here is empty, return to Main menu.")
+    main_menu()
+    # temporary
+
+
 def main_menu():
     print("\nCOMPUTER: You are in Main menu.")
     print("COMPUTER: Enter digit for next action. (1-4/0)")
@@ -161,4 +201,4 @@ def close_program():
     exit()
 
 
-main_menu()
+starter()
