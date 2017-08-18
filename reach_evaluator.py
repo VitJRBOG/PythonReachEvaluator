@@ -1,10 +1,15 @@
 # coding: utf8
 
 
+import os
+import json
+
+
 class Day:
     day_number = 0
     month_number = 0
     day_week = "none"
+    coverage = []
 
     def set_day_number(self, day_number):
         self.day_number = day_number
