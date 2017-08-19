@@ -243,11 +243,19 @@ def add_menu():
                     coverage = 0
                     i = 0
                     while i < int(user_answer):
-                        coverage = coverage + \
+                        coverage = coverage +\
                             enter_coverage(interval["time"], i + 1)
                         i += 1
 
-                    interval["value"] = coverage
+                    coverage = int(coverage) / int(user_answer)
+
+                    coverage = float(coverage / 100)
+
+                    coverage = round(coverage)
+
+                    coverage = coverage * 100
+
+                    interval["value"] = int(coverage)
                     return interval
                 else:
                     print("COMPUTER [.. -> New data -> Posts amount]: " +
@@ -268,9 +276,13 @@ def add_menu():
                                     " -> Post coverage №" +
                                     str(post_number) + "]: ")
 
-            # rounding
+            answer = float(float(user_answer) / 100)
 
-            return int(user_answer)
+            answer = round(answer)
+
+            answer = answer * 100
+
+            return int(answer)
 
         except Exception as var_except:
             print(
