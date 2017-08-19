@@ -73,13 +73,24 @@ def read_json(sender, path, file_name):
         main_menu()
 
 
-def write_json(sender):
-    # temporary
-    print("COMPUTER [.. -> " + str(sender) + " -> Write JSON]: ...")
-    print("COMPUTER [.. -> " + str(sender) + " -> Write JSON]: " +
-          "Here is empty, return to Main menu.")
-    main_menu()
-    # temporary
+def write_json(sender, path, file_name, coverage):
+
+    try:
+        file_json = open(str(path) + str(file_name) + ".json", "w")
+        file_json.write(json.dumps(coverage, indent=4, ensure_ascii=False))
+        file_json.close()
+
+        print("COMPUTER [.. -> " + str(sender) + " Write JSON] " +
+              "File \"" + file_name + ".json\" was successfully created. " +
+              "Return to Main menu...")
+        main_menu()
+
+    except Exception as var_except:
+        print(
+            "COMPUTER [.. -> " + str(sender) +
+            " -> Write JSON]: Error, " + str(var_except) +
+            ". Return to Main menu...")
+        main_menu()
 
 
 def main_menu():
@@ -286,8 +297,40 @@ def add_menu():
 
         except Exception as var_except:
             print(
-                "COMPUTER [.. -> " + str(var_except) +
-                " -> Post coverage]: Error, " +
+                "COMPUTER [.. -> Post coverage]: Error, " +
+                str(var_except) +
+                ". Return to Main menu...")
+            main_menu()
+
+    def make_json_log(obj_day):
+        try:
+
+            file_name = "log_" + str(obj_day.get_day_number())
+
+            month = [
+                "jan", "feb", "mar",
+                "apr", "may", "jun",
+                "jul", "aug", "sep",
+                "oct", "nov", "dec"
+            ]
+
+            file_name = file_name + "-" +\
+                str(month[int(obj_day.get_month_number()) - 1])
+
+            day_week = [
+                "mon", "sun", "wed",
+                "thu", "fri", "sat",
+                "sun"
+            ]
+
+            file_name = file_name + "-" +\
+                str(day_week[int(obj_day.get_day_week()) - 1])
+
+            write_json("Make JSON", "json/", file_name, obj_day.get_coverage())
+
+        except Exception as var_except:
+            print(
+                "COMPUTER [.. -> New data -> Make JSON]: Error, " +
                 str(var_except) +
                 ". Return to Main menu...")
             main_menu()
@@ -305,15 +348,11 @@ def add_menu():
         loads_json = read_json("New data", "", "template")
         obj_day = enter_date(obj_day)
         obj_day = check_intervals(obj_day, loads_json)
+        make_json_log(obj_day)
 
-        # func of making loads_json from obj_day
-        # func writing loads_json to json file
-
-    # temporary
-    print("COMPUTER [.. -> New data]: ...")
-    print("COMPUTER [.. -> New data]: Here is empty, return to Main menu.")
-    main_menu()
-    # temporary
+        print("COMPUTER [.. - New data] Something wrong. " +
+              "Return to Main menu...")
+        main_menu()
 
 
 def show_menu():
