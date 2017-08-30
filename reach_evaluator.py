@@ -73,11 +73,11 @@ def read_json(sender, path, file_name):
         main_menu()
 
 
-def write_json(sender, path, file_name, coverage):
+def write_json(sender, path, file_name, loads_json):
 
     try:
         file_json = open(str(path) + str(file_name) + ".json", "w")
-        file_json.write(json.dumps(coverage, indent=4, ensure_ascii=False))
+        file_json.write(json.dumps(loads_json, indent=4, ensure_ascii=False))
         file_json.close()
 
         print("COMPUTER [.. -> " + str(sender) + " Write JSON] " +
@@ -110,16 +110,18 @@ def write_text(sender, path, file_name, text_output):
             " -> Write output]: Error, " + str(var_except) +
             ". Return to Main menu...")
         main_menu()
+
+
 def main_menu():
-    print("\nCOMPUTER: You are in Main menu.")
-    print("COMPUTER: Enter digit for next action. (1-4/0)")
+    print("\nCOMPUTER [Main menu]: You are in Main menu.")
+    print("COMPUTER [Main menu]: Enter digit for next action. (1-4/0)")
     print("COMPUTER [Main menu]: 1 == Add new data about reach.")
     print("COMPUTER [Main menu]: 2 == Show data.")
     print("COMPUTER [Main menu]: 3 == Settings of intervals.")
     print("COMPUTER [Main menu]: 4 == Evaluate.")
     print("COMPUTER [Main menu]: 0 == Close the program.")
 
-    user_answer = raw_input("USER [Main menu -> ..]: ")
+    user_answer = raw_input("USER [Main menu]: ")
 
     if user_answer == "0":
         close_program()
@@ -260,14 +262,14 @@ def add_menu():
         try:
             user_answer = raw_input("USER [.. -> Posts amount -> " +
                                     str(interval["time"]) +
-                                    "]: (1-50/00) ")
+                                    "]: (1-10/00) ")
 
             if user_answer == "00":
                 print("COMPUTER [.. -> New data -> Posts amount]: Abort. " +
                       "Return to Main menu...")
                 main_menu()
             else:
-                if int(user_answer) > 0 and int(user_answer) < 51:
+                if int(user_answer) > 0 and int(user_answer) < 11:
                     coverage = 0
                     i = 0
                     while i < int(user_answer):
@@ -335,7 +337,7 @@ def add_menu():
                 str(month[int(obj_day.get_month_number()) - 1])
 
             day_week = [
-                "mon", "sun", "wed",
+                "mon", "tue", "wed",
                 "thu", "fri", "sat",
                 "sun"
             ]
@@ -343,7 +345,14 @@ def add_menu():
             file_name = file_name + "-" +\
                 str(day_week[int(obj_day.get_day_week()) - 1])
 
-            write_json("Make JSON", "json/", file_name, obj_day.get_coverage())
+            loads_json = {
+                "day_number": int(obj_day.get_day_number()),
+                "month_number": int(obj_day.get_month_number()),
+                "day_week": int(obj_day.get_day_week()),
+                "coverage": obj_day.get_coverage()
+            }
+
+            write_json("Make JSON", "json/", file_name, loads_json)
 
         except Exception as var_except:
             print(
