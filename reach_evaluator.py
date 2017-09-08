@@ -80,7 +80,7 @@ def write_json(sender, path, file_name, loads_json):
         file_json.write(json.dumps(loads_json, indent=4, ensure_ascii=False))
         file_json.close()
 
-        print("COMPUTER [.. -> " + str(sender) + " Write JSON] " +
+        print("COMPUTER [.. -> " + str(sender) + " -> Write JSON] " +
               "File \"" + file_name + ".json\" was successfully created. " +
               "Return to Main menu...")
         main_menu()
@@ -121,7 +121,7 @@ def main_menu():
     print("COMPUTER [Main menu]: 4 == Evaluate.")
     print("COMPUTER [Main menu]: 0 == Close the program.")
 
-    user_answer = raw_input("USER [Main menu]: ")
+    user_answer = raw_input("USER [Main menu]: (1-4/0) ")
 
     if user_answer == "0":
         close_program()
