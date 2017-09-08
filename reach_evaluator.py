@@ -384,6 +384,7 @@ def add_menu():
 def show_menu():
 
     def export_query(sender, file_name, text_output):
+
         try:
             print("\nCOMPUTER [.. -> " + str(sender) +
                   " -> Make output -> Export]: Export log to text file?")
@@ -408,187 +409,299 @@ def show_menu():
                   ". Return to Main menu...")
             main_menu()
 
-    def make_output(sender, file_name):
-        try:
-            pos = file_name.find(".json")
-            file_name = file_name[0:pos]
-
-            loads_json = read_json(sender, "json/", file_name)
-
-            month = [
-                "января", "февраля", "марта",
-                "апреля", "мая", "июня",
-                "июля", "августа", "сентября",
-                "октября", "ноября", "декабря"
-            ]
-
-            day_week = [
-                "понедельник", "вторник", "среда",
-                "четверг", "пятница", "суббота",
-                "воскресенье"
-            ]
-
-            text_output = "[" + str(loads_json["day_number"])
-            text_output += " " +\
-                str(month[int(loads_json["month_number"]) - 1])
-            text_output += ", " +\
-                str(day_week[int(loads_json["day_week"]) - 1]) + "]"
-
-            coverage = loads_json["coverage"]
-
-            i = len(coverage) - 1
-            while i >= 0:
-                text_output += "\n" + str(coverage[str(i)]["time"])
-                text_output += " (" + str(coverage[str(i)]["value"]) + ")"
-                i -= 1
-
-            print("\n" + text_output)
-
-            export_query(sender, file_name, text_output)
-        except Exception as var_except:
-            print("COMPUTER [.. -> " + str(sender) +
-                  " -> Make output]: Error, " +
-                  str(var_except) +
-                  ". Return to Main menu...")
-            main_menu()
-
     def show_files(sender, list_files):
-        try:
-            print("\n")
-            i = 0
-            while i < len(list_files):
-                print("[" + str(i + 1) + "] " + str(list_files[i]))
-                i += 1
 
-            print("COMPUTER [.. -> Show files -> " + str(sender) + "]: " +
-                  "Select file, or exit to " +
-                  "Show menu. (1-" + str(len(list_files)) + "/0)")
-            user_answer = raw_input("USER [.. -> All logs] ")
+        def make_output(sender, file_name):
+            try:
+                pos = file_name.find(".json")
+                file_name = file_name[0:pos]
 
-            if user_answer == "0":
-                show_menu()
-            else:
-                if int(user_answer) > 0 \
-                   and int(user_answer) <= len(list_files):
-                    make_output(sender, list_files[int(user_answer)])
-                else:
-                    print("COMPUTER [.. -> Show files -> " +
+                loads_json = read_json(sender, "json/", file_name)
+
+                month = [
+                    "января", "февраля", "марта",
+                    "апреля", "мая", "июня",
+                    "июля", "августа", "сентября",
+                    "октября", "ноября", "декабря"
+                ]
+
+                day_week = [
+                    "понедельник", "вторник", "среда",
+                    "четверг", "пятница", "суббота",
+                    "воскресенье"
+                ]
+
+                text_output = "[" + str(loads_json["day_number"])
+                text_output += " " +\
+                    str(month[int(loads_json["month_number"]) - 1])
+                text_output += " - " +\
+                    str(day_week[int(loads_json["day_week"]) - 1]) + "]"
+
+                coverage = loads_json["coverage"]
+
+                i = len(coverage) - 1
+                while i >= 0:
+                    text_output += "\n" + str(coverage[str(i)]["time"])
+                    text_output += " (" + str(coverage[str(i)]["value"]) + ")"
+                    i -= 1
+
+                print("\n" + text_output)
+
+                export_query(sender, file_name, text_output)
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> " + str(sender) +
+                      " -> Make output]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        def print_to_console(sender, list_files):
+            try:
+                user_answer = ""
+                count = 0
+
+                if sender == "All logs":
+                    print("\n")
+                    i = 0
+                    while i < len(list_files):
+                        print("[" + str(i + 1) + "] " + str(list_files[i]))
+                        count += 1
+                        i += 1
+
+                if sender == "By days week logs":
+
+                    day_week = [
+                        "понедельник", "вторник", "среда",
+                        "четверг", "пятница", "суббота",
+                        "воскресенье"
+                    ]
+
+                    print("\n")
+                    i = 0
+                    while i < len(day_week):
+                        print("[" + str(i + 1) + "] " + str(day_week[i]))
+                        i += 1
+
+                    print("\nCOMPUTER [.. -> Show files -> " +
                           str(sender) + "]: " +
-                          "Error, check entered data. Retry query...")
-                    show_files(sender, list_files)
-        except Exception as var_except:
-            print("COMPUTER [.. -> Show files -> " + str(sender) + "]: " +
-                  "Error, " +
-                  str(var_except) +
-                  ". Return to Main menu...")
-            main_menu()
+                          "Select day of the week, or exit to Show menu.")
+                    user_answer = raw_input("USER [.. -> " + str(sender) +
+                                            "] " +
+                                            "(1-" + str(len(day_week)) +
+                                            "/0) ")
 
-    def sort_files(list_files):
-        try:
+                    if user_answer == "0":
+                        show_menu()
+                    else:
+                        if int(user_answer) > 0 \
+                           and int(user_answer) <= len(day_week):
 
-            def sort_by_month(list_files):
+                            day_week = [
+                                "mon", "tue", "wed",
+                                "thu", "fri", "sat",
+                                "sun"
+                            ]
 
-                try:
+                            print("\n")
+                            i = 0
 
-                    month = [
-                        "jan", "feb", "mar",
-                        "apr", "may", "jun",
-                        "jul", "aug", "sep",
-                        "oct", "nov", "dec"
-                    ]
+                            while i < len(list_files):
+                                pos = list_files[i].find(
+                                    day_week[int(user_answer) - 1])
+                                if pos != -1:
+                                    print("[" +
+                                          str(i + 1) + "] " +
+                                          str(list_files[i]))
+                                    count += 1
+                                i += 1
 
-                    dict_by_month = {
-                        "jan": [],
-                        "feb": [],
-                        "mar": [],
-                        "apr": [],
-                        "may": [],
-                        "jun": [],
-                        "jul": [],
-                        "aug": [],
-                        "sep": [],
-                        "oct": [],
-                        "nov": [],
-                        "dec": []
-                    }
-
-                    i = 0
-
-                    while i < len(month):
-
-                        j = 0
-                        while j < len(list_files):
-                            file_name = str(list_files[j])
-
-                            pos = file_name.lower().find(month[i])
-                            if pos != -1:
-                                dict_by_month[month[i]].append(file_name)
-                            j += 1
-                        i += 1
-                    return dict_by_month
-
-                except Exception as var_except:
-                    print("COMPUTER [.. -> Sort files -> Sort by month]: " +
-                          "Error, " +
-                          str(var_except) +
-                          ". Return to Main menu...")
-                    main_menu()
-
-            def sort_by_daynumber(dict_by_month):
-                try:
-                    i = 0
+                if sender == "By months logs":
 
                     month = [
-                        "jan", "feb", "mar",
-                        "apr", "may", "jun",
-                        "jul", "aug", "sep",
-                        "oct", "nov", "dec"
+                        "январь", "февраль", "март",
+                        "апрель", "май", "июнь",
+                        "июль", "август", "сентябрь",
+                        "октябрь", "ноябрь", "декабрь"
                     ]
 
+                    print("\n")
+                    i = 0
                     while i < len(month):
-                        j = 0
-                        while j < len(dict_by_month[month[i]]):
-                            list_by_month = dict_by_month[month[i]]
-                            new_list = []
-
-                            n = 31
-                            while n > 0:
-
-                                m = 0
-                                while m < len(list_by_month):
-                                    file_name = list_by_month[m]
-
-                                    pos = file_name.find(str(n))
-
-                                    if pos != -1:
-                                        new_list.insert(0, file_name)
-                                        list_by_month[m] = ""
-                                    m += 1
-                                n -= 1
-                            dict_by_month[month[i]] = new_list
-                            j += 1
+                        print("[" + str(i + 1) + "] " + str(month[i]))
                         i += 1
-                    return dict_by_month
 
-                except Exception as var_except:
-                    print("COMPUTER [.. -> Sort files -> " +
-                          "Sort by day number]: " +
-                          "Error, " +
-                          str(var_except) +
-                          ". Return to Main menu...")
-                    main_menu()
+                    print("\nCOMPUTER [.. -> Show files -> " +
+                          str(sender) + "]: " +
+                          "Select month, or exit to Show menu.")
+                    user_answer = raw_input("USER [.. -> " + str(sender) +
+                                            "] " +
+                                            "(1-" + str(len(month)) +
+                                            "/0) ")
 
-            dict_by_month = sort_by_month(list_files)
-            dict_by_month = sort_by_daynumber(dict_by_month)
-            return dict_by_month
+                    if user_answer == "0":
+                        show_menu()
+                    else:
+                        if int(user_answer) > 0 \
+                           and int(user_answer) <= len(month):
 
-        except Exception as var_except:
-            print("COMPUTER [.. -> Show data -> Sort files]: Error, " +
-                  str(var_except) +
-                  ". Return to Main menu...")
-            main_menu()
+                            month = [
+                                "jan", "feb", "mar",
+                                "apr", "may", "jun",
+                                "jul", "aug", "sep",
+                                "oct", "nov", "dec"
+                            ]
+
+                            print("\n")
+                            i = 0
+
+                            while i < len(list_files):
+                                pos = list_files[i].find(
+                                    month[int(user_answer) - 1])
+                                if pos != -1:
+                                    print("[" +
+                                          str(i + 1) + "] " +
+                                          str(list_files[i]))
+                                    count += 1
+                                i += 1
+
+                print("\nCOMPUTER [.. -> Show files -> " +
+                      str(sender) + "]: " +
+                      "Select file, or exit to Show menu.")
+                user_answer = raw_input("USER [.. -> " +
+                                        str(sender) +
+                                        "] (1-" +
+                                        str(count) +
+                                        "/0) ")
+
+                if user_answer == "0":
+                    show_menu()
+                else:
+                    if int(user_answer) > 0 \
+                       and int(user_answer) <= len(list_files):
+                        make_output(sender, list_files[int(user_answer) - 1])
+                    else:
+                        print("COMPUTER [.. -> Show files -> " +
+                              str(sender) + "]: " +
+                              "Error, check entered data. Retry query...")
+                        show_files(sender, list_files)
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> Show files -> " + str(sender) + "]: " +
+                      "Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        print_to_console(sender, list_files)
 
     def make_list():
+
+        def sort_files(list_files):
+            try:
+
+                def sort_by_month(list_files):
+
+                    try:
+
+                        month = [
+                            "jan", "feb", "mar",
+                            "apr", "may", "jun",
+                            "jul", "aug", "sep",
+                            "oct", "nov", "dec"
+                        ]
+
+                        dict_by_month = {
+                            "jan": [],
+                            "feb": [],
+                            "mar": [],
+                            "apr": [],
+                            "may": [],
+                            "jun": [],
+                            "jul": [],
+                            "aug": [],
+                            "sep": [],
+                            "oct": [],
+                            "nov": [],
+                            "dec": []
+                        }
+
+                        i = 0
+
+                        while i < len(month):
+
+                            j = 0
+                            while j < len(list_files):
+                                file_name = str(list_files[j])
+
+                                pos = file_name.lower().find(month[i])
+                                if pos != -1:
+                                    dict_by_month[month[i]].append(file_name)
+                                j += 1
+                            i += 1
+                        return dict_by_month
+
+                    except Exception as var_except:
+                        print("COMPUTER [.. -> Sort files -> " +
+                              "Sort by month]: " +
+                              "Error, " +
+                              str(var_except) +
+                              ". Return to Main menu...")
+                        main_menu()
+
+                def sort_by_daynumber(dict_by_month):
+                    try:
+                        i = 0
+
+                        month = [
+                            "jan", "feb", "mar",
+                            "apr", "may", "jun",
+                            "jul", "aug", "sep",
+                            "oct", "nov", "dec"
+                        ]
+
+                        while i < len(month):
+                            j = 0
+                            while j < len(dict_by_month[month[i]]):
+                                list_by_month = dict_by_month[month[i]]
+                                new_list = []
+
+                                n = 31
+                                while n > 0:
+
+                                    m = 0
+                                    while m < len(list_by_month):
+                                        file_name = list_by_month[m]
+
+                                        pos = file_name.find(str(n))
+
+                                        if pos != -1:
+                                            new_list.insert(0, file_name)
+                                            list_by_month[m] = ""
+                                        m += 1
+                                    n -= 1
+                                dict_by_month[month[i]] = new_list
+                                j += 1
+                            i += 1
+                        return dict_by_month
+
+                    except Exception as var_except:
+                        print("COMPUTER [.. -> Sort files -> " +
+                              "Sort by day number]: " +
+                              "Error, " +
+                              str(var_except) +
+                              ". Return to Main menu...")
+                        main_menu()
+
+                dict_by_month = sort_by_month(list_files)
+                dict_by_month = sort_by_daynumber(dict_by_month)
+                return dict_by_month
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> Show data -> Sort files]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
 
         list_files = os.listdir("json/")
 
@@ -624,21 +737,29 @@ def show_menu():
 
         show_menu()
 
-    def list_months():
-        # temporary
-        print("COMPUTER [.. -> Months logs]: ...")
-        print("COMPUTER [.. -> Months logs]: " +
-              "Here is empty, return to Main menu.")
-        main_menu()
-        # temporary
-
     def list_days_week():
-        # temporary
-        print("COMPUTER [.. -> Days week logs]: ...")
-        print("COMPUTER [.. -> Days week logs]: " +
-              "Here is empty, return to Main menu.")
-        main_menu()
-        # temporary
+        try:
+            list_files = make_list()
+            show_files("By days week logs", list_files)
+        except Exception as var_except:
+            print("COMPUTER [.. -> Show data -> Day week logs]: Error, " +
+                  str(var_except) +
+                  ". Return to Main menu...")
+            main_menu()
+
+        show_menu()
+
+    def list_months():
+        try:
+            list_files = make_list()
+            show_files("By months logs", list_files)
+        except Exception as var_except:
+            print("COMPUTER [.. -> Show data -> By months logs]: Error, " +
+                  str(var_except) +
+                  ". Return to Main menu...")
+            main_menu()
+
+        show_menu()
 
     print("\nCOMPUTER [.. -> Show data]: You are in Show menu.")
     print("COMPUTER [.. -> Show data]: Enter digit for next action. (1-3/0)")
@@ -647,7 +768,7 @@ def show_menu():
     print("COMPUTER [.. -> Show data]: 3 == Show lists by months.")
     print("COMPUTER [.. -> Show data]: 0 == Step back.")
 
-    user_answer = raw_input("USER [.. -> Show data]: ")
+    user_answer = raw_input("USER [.. -> Show data]: (1-3/0) ")
 
     if user_answer == "0":
         main_menu()
@@ -656,34 +777,14 @@ def show_menu():
             list_all()
         else:
             if user_answer == "2":
-                # temporary
-                print("COMPUTER [.. -> Show data]: ...")
-                print("COMPUTER [.. -> Show data]: " +
-                      "Here is empty, return to Main menu.")
-                main_menu()
-                # temporary
+                list_days_week()
             else:
                 if user_answer == "3":
-                    # temporary
-                    print("COMPUTER [.. -> Show data]: ...")
-                    print("COMPUTER [.. -> Show data]: " +
-                          "Here is empty, return to Main menu.")
-                    main_menu()
-                    # temporary
+                    list_months()
                 else:
                     print("COMPUTER [.. -> Show data]: Unknown command. " +
                           "Retry query...")
                     show_menu()
-
-    print("\nCOMPUTER [.. -> Show data]: You are in menu of show data.")
-
-    # temporary
-    print("COMPUTER [.. -> Show data]: ...")
-    print("COMPUTER [.. -> Show data]: Here is empty, return to Main menu.")
-    main_menu()
-    # temporary
-
-    print("COMPUTER [.. -> Show data]: Enter digit for next action.")
 
 
 def settings_menu():
