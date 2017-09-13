@@ -101,10 +101,10 @@ def write_text(sender, path, file_name, text_output):
         file_text.write(text_output)
         file_text.close()
 
-        print("COMPUTER [.. -> " + str(sender) + " Write output] " +
+        print("COMPUTER [.. -> " + str(sender) + " -> Write output] " +
               "File \"" + file_name + ".txt\" was successfully created. " +
-              "Return to Show menu...")
-        show_menu()
+              "Return to Main menu...")
+        main_menu()
     except Exception as var_except:
         print(
             "COMPUTER [.. -> " + str(sender) +
