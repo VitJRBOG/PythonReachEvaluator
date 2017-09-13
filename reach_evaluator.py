@@ -153,21 +153,24 @@ def add_menu():
         def enter_day_number(obj_day):
 
             try:
-                user_answer = raw_input("USER [.. -> New data -> " +
-                                        "Day number]: (1-28/29/30/31/00) ")
 
-                if user_answer == "00":
-                    print("COMPUTER [.. -> New data -> Day number] Abort. " +
-                          "Return to Main menu...")
-                    main_menu()
-                else:
-                    if int(user_answer) > 0 and int(user_answer) < 32:
-                        obj_day.set_day_number(int(user_answer))
-                        return obj_day
+                while True:
+                    user_answer = raw_input("USER [.. -> New data -> " +
+                                            "Day number]: (1-28/29/30/31/00) ")
+
+                    if user_answer == "00":
+                        print("COMPUTER [.. -> " +
+                              "New data -> Day number] Abort. " +
+                              "Return to Main menu...")
+                        main_menu()
                     else:
-                        print("COMPUTER [.. -> New data -> Day number] " +
-                              "Error. Check entered data. Retry query...")
-                        enter_day_number(obj_day)
+                        if user_answer != "" and\
+                           int(user_answer) > 0 and int(user_answer) < 32:
+                            obj_day.set_day_number(int(user_answer))
+                            return obj_day
+                        else:
+                            print("COMPUTER [.. -> New data -> Day number] " +
+                                  "Error. Check entered data. Retry query...")
 
             except Exception as var_except:
                 print(
@@ -179,22 +182,25 @@ def add_menu():
         def enter_month_number(obj_day):
 
             try:
-                user_answer = raw_input("USER [.. -> New data -> " +
-                                        "Number of month]: (1-12/00) ")
 
-                if user_answer == "00":
-                        print("COMPUTER [.. -> New data -> Number of month] " +
-                              "Abort. Return to Main menu...")
-                        main_menu()
-                else:
-                    if int(user_answer) > 0 and int(user_answer) < 13:
-                        obj_day.set_month_number(int(user_answer))
-                        return obj_day
+                while True:
+                    user_answer = raw_input("USER [.. -> New data -> " +
+                                            "Number of month]: (1-12/00) ")
+
+                    if user_answer == "00":
+                            print("COMPUTER [.. -> New data -> " +
+                                  "Number of month] " +
+                                  "Abort. Return to Main menu...")
+                            main_menu()
                     else:
-                        print("COMPUTER [.. -> New data -> " +
-                              "Number of month] " +
-                              "Error. Check entered data. Retry query...")
-                        enter_month_number(obj_day)
+                        if user_answer != "" and\
+                           int(user_answer) > 0 and int(user_answer) < 13:
+                            obj_day.set_month_number(int(user_answer))
+                            return obj_day
+                        else:
+                            print("COMPUTER [.. -> New data -> " +
+                                  "Number of month] " +
+                                  "Error. Check entered data. Retry query...")
 
                 obj_day.set_month_number(int(user_answer))
             except Exception as var_except:
@@ -206,22 +212,25 @@ def add_menu():
 
         def enter_day_week(obj_day):
             try:
-                user_answer = raw_input("USER [.. -> New data -> Day week]: " +
-                                        "1-7/00 ")
 
-                if user_answer == "00":
-                        print("COMPUTER [.. -> New data -> Day week] " +
-                              "Abort. Return to Main menu...")
-                        main_menu()
-                else:
-                    if int(user_answer) > 0 and int(user_answer) < 8:
-                        obj_day.set_day_week(int(user_answer))
-                        return obj_day
+                while True:
+                    user_answer = raw_input("USER [.. -> New data -> " +
+                                            "Day week]: " +
+                                            "1-7/00 ")
+
+                    if user_answer == "00":
+                            print("COMPUTER [.. -> New data -> Day week] " +
+                                  "Abort. Return to Main menu...")
+                            main_menu()
                     else:
-                        print("COMPUTER [.. -> New data -> " +
-                              "Day week] " +
-                              "Error. Check entered data. Retry query...")
-                        enter_day_week(obj_day)
+                        if user_answer != "" and\
+                           int(user_answer) > 0 and int(user_answer) < 8:
+                            obj_day.set_day_week(int(user_answer))
+                            return obj_day
+                        else:
+                            print("COMPUTER [.. -> New data -> " +
+                                  "Day week] " +
+                                  "Error. Check entered data. Retry query...")
 
                 obj_day.set_day_week(int(user_answer))
             except Exception as var_except:
@@ -270,7 +279,8 @@ def add_menu():
                       "Return to Main menu...")
                 main_menu()
             else:
-                if int(user_answer) > 0 and int(user_answer) < 11:
+                if user_answer != "" and\
+                   int(user_answer) > 0 and int(user_answer) < 11:
                     coverage = 0
                     i = 0
                     while i < int(user_answer):
@@ -303,17 +313,26 @@ def add_menu():
     def enter_coverage(interval_time, post_number):
 
         try:
-            user_answer = raw_input("USER [.. -> " + str(interval_time) +
-                                    " -> Post coverage №" +
-                                    str(post_number) + "]: ")
 
-            answer = float(float(user_answer) / 100)
+            while True:
 
-            answer = round(answer)
+                user_answer = raw_input("USER [.. -> " + str(interval_time) +
+                                        " -> Post coverage №" +
+                                        str(post_number) + "]: ")
 
-            answer = answer * 100
+                if user_answer != "" and int(user_answer) > 999:
 
-            return int(answer)
+                    answer = float(float(user_answer) / 100)
+
+                    answer = round(answer)
+
+                    answer = answer * 100
+
+                    return int(answer)
+
+                else:
+                    print("COMPUTER [.. -> Post coverage]: " +
+                          "Error, check entered data. Retry query...")
 
         except Exception as var_except:
             print(
