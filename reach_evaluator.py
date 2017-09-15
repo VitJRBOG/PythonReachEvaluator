@@ -1058,13 +1058,14 @@ def evaluate_menu():
 
             i = 0
             while i < len(day_week):
-                text_output += "\n" + str(day_week_ru[i]) + "\n"
+                text_output += "\n=== " + str(day_week_ru[i]) + " ===\n"
                 j = 0
                 while j < len(list_result_evaluate[day_week[i]]):
                     dw = day_week[i]
                     es = evaluate_status[j]
                     status = list_result_evaluate[dw][es]
-                    text_output += "\n" + str(evaluate_status_ru[j]) + ": "
+                    text_output += "\n'''" +\
+                        str(evaluate_status_ru[j]) + ":''' "
                     n = 0
                     while n < len(status):
                         time_output = ""
