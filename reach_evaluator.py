@@ -1318,6 +1318,36 @@ def evaluate_menu():
             main_menu()
         evaluate_menu()
 
+    def algorithm_evaluate(sender, status, coverage):
+        try:
+            n = 0
+            while n < len(status):
+                sn = str(n)  # because many symbols
+                value = 100
+                m = 0
+                while m < len(coverage):
+                    sm = str(m)  # because many symbols
+                    if value < coverage[sm]["value"]:
+                        value = coverage[sm]["value"]
+                    m += 1
+                status[sn]["value"] = value
+                m = 0
+                while m < len(coverage):
+                    sm = str(m)  # because many symbols
+                    if value == coverage[sm]["value"]:
+                        status[sn]["time"].append(coverage[sm]["time"])
+                        coverage[sm]["value"] = 0
+                    m += 1
+                n += 1
+            return status
+        except Exception as var_except:
+            print("COMPUTER [.. -> Evaluate -> " +
+                  str(sender) + " -> Evaluate coverage -> " +
+                  "Coverage algorithm]: Error, " +
+                  str(var_except) +
+                  ". Return to Main menu...")
+            main_menu()
+
     def evaluate_coverage(sender, list_result_sum):
         try:
             day_week = [
@@ -1393,25 +1423,7 @@ def evaluate_menu():
                 while j < len(evaluate_status):
                     es = evaluate_status[j]
                     status = copy.deepcopy(list_result_evaluate[dw][es])
-                    n = 0
-                    while n < len(status):
-                        sn = str(n)  # because many symbols
-                        value = 100
-                        m = 0
-                        while m < len(coverage):
-                            sm = str(m)  # because many symbols
-                            if value < coverage[sm]["value"]:
-                                value = coverage[sm]["value"]
-                            m += 1
-                        status[sn]["value"] = value
-                        m = 0
-                        while m < len(coverage):
-                            sm = str(m)  # because many symbols
-                            if value == coverage[sm]["value"]:
-                                status[sn]["time"].append(coverage[sm]["time"])
-                                coverage[sm]["value"] = 0
-                            m += 1
-                        n += 1
+                    status = algorithm_evaluate(sender, status, coverage)
                     j += 1
                     list_result_evaluate[dw][es] = copy.deepcopy(status)
                 i += 1
