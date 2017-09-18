@@ -43,6 +43,93 @@ class Day:
         self.coverage = []
 
 
+class Template():
+    begin_hours = []
+    begin_minutes = []
+    end_hours = []
+    end_minutes = []
+    time = []
+
+    def join_time(self):
+
+        try:
+            if len(self.begin_hours) == len(self.begin_minutes) and\
+               len(self.end_hours) == len(self.end_minutes) and\
+               len(self.begin_hours) == len(self.end_hours) and\
+               len(self.begin_minutes) == len(self.end_minutes):
+
+                length_lists = len(self.begin_hours)
+
+                i = 0
+                while i < length_lists:
+
+                    begin_hours_str = str(self.begin_hours[i])
+                    if len(begin_hours_str) == 1:
+                        begin_hours_str = "0" + begin_hours_str
+
+                    begin_minutes_str = str(self.begin_minutes[i])
+                    if len(begin_minutes_str) == 1:
+                        begin_minutes_str = "0" + begin_minutes_str
+
+                    end_hours_str = str(self.end_hours[i])
+                    if len(end_hours_str) == 1:
+                        end_hours_str = "0" + end_hours_str
+
+                    end_minutes_str = str(self.end_minutes[i])
+                    if len(end_minutes_str) == 1:
+                        end_minutes_str = "0" + end_minutes_str
+
+                    time_str = begin_hours_str + ":" + begin_minutes_str +\
+                        "-" + end_hours_str + ":" + end_minutes_str
+
+                    self.time.append(time_str)
+                    i += 1
+
+            else:
+                print("COMPUTER [.. -> Join of time]: Error. " +
+                      "Length of lists are different. " +
+                      "Return to Main menu...")
+                main_menu()
+
+        except Exception as var_except:
+            print("COMPUTER [.. -> Join of time]: Error, " +
+                  str(var_except) + ". Return to Main menu...")
+
+    def set_begin_hours(self, begin_hours):
+        self.begin_hours = begin_hours
+
+    def set_begin_minutes(self, begin_minutes):
+        self.begin_minutes = begin_minutes
+
+    def set_end_hours(self, end_hours):
+        self.end_hours = end_hours
+
+    def set_end_minutes(self, end_minutes):
+        self.end_minutes = end_minutes
+
+    def get_begin_hours(self):
+        return self.begin_hours
+
+    def get_begin_minutes(self):
+        return self.begin_minutes
+
+    def get_end_hours(self):
+        return self.end_hours
+
+    def get_end_minutes(self):
+        return self.end_minutes
+
+    def get_time(self):
+        self.join_time()
+        return self.time
+
+    def __init__(self):
+        self.begin_hours = []
+        self.begin_minutes = []
+        self.end_hours = []
+        self.end_minutes = []
+
+
 def starter():
     try:
 
@@ -839,6 +926,276 @@ def show_menu():
 
 
 def settings_menu():
+
+    PATH = read_path_txt()
+
+    def create_template(count_intervals):
+
+        def input_begin_hour(i, obj_template):
+
+            try:
+
+                while True:
+
+                    user_answer = raw_input("USER [.. -> Create template -> " +
+                                            "Interval №" + str(i + 1) +
+                                            " -> Begin time " +
+                                            "-> Hours]: (0-23/00) ")
+                    if user_answer == "00":
+                        print("COMPUTER [.. -> Begin time -> Hours]: " +
+                              "Abort. Return to menu Settings...")
+                        settings_menu()
+                    else:
+                        if user_answer != "" and\
+                           int(user_answer) >= 0 and int(user_answer) < 24:
+
+                            begin_hours = obj_template.get_begin_hours()
+                            begin_hours.append(int(user_answer))
+                            obj_template.set_begin_hours(begin_hours)
+
+                            return obj_template
+                        else:
+                            print("COMPUTER [.. -> Begin time -> Hours]: " +
+                                  "Error, check entered data. Retry query...")
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> Begin time -> Hours]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        def input_begin_minutes(i, obj_template):
+
+            try:
+
+                while True:
+
+                    user_answer = raw_input("USER [.. -> Create template -> " +
+                                            "Interval №" + str(i + 1) +
+                                            " -> Begin time " +
+                                            "-> Minutes]: (0-59/00) ")
+                    if user_answer == "00":
+                        print("COMPUTER [.. -> Begin time -> Minutes]: " +
+                              "Abort. Return to menu Settings...")
+                        settings_menu()
+                    else:
+                        if user_answer != "" and\
+                           int(user_answer) >= 0 and int(user_answer) < 60:
+
+                            begin_minutes = obj_template.get_begin_minutes()
+                            begin_minutes.append(int(user_answer))
+                            obj_template.set_begin_minutes(begin_minutes)
+
+                            return obj_template
+                        else:
+                            print("COMPUTER [.. -> Begin time -> Minutes]: " +
+                                  "Error, check entered data. Retry query...")
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> Begin time -> Minutes]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        def input_end_hour(i, obj_template):
+
+            try:
+
+                while True:
+
+                    user_answer = raw_input("USER [.. -> Create template -> " +
+                                            "Interval №" + str(i + 1) +
+                                            " -> End time " +
+                                            "-> Hours]: (0-59/00) ")
+                    if user_answer == "00":
+                        print("COMPUTER [.. -> End time -> Hours]: " +
+                              "Abort. Return to menu Settings...")
+                        settings_menu()
+                    else:
+                        if user_answer != "" and\
+                           int(user_answer) >= 0 and int(user_answer) < 60:
+
+                            end_hours = obj_template.get_end_hours()
+                            end_hours.append(int(user_answer))
+                            obj_template.set_end_hours(end_hours)
+
+                            return obj_template
+                        else:
+                            print("COMPUTER [.. -> End time -> Hours]: " +
+                                  "Error, check entered data. Retry query...")
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> End time -> Hours]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        def input_end_minutes(i, obj_template):
+
+            try:
+
+                while True:
+
+                    user_answer = raw_input("USER [.. -> Create template -> " +
+                                            "Interval №" + str(i + 1) +
+                                            " -> End time " +
+                                            "-> Minutes]: (0-59/00) ")
+                    if user_answer == "00":
+                        print("COMPUTER [.. -> End time -> Minutes]: " +
+                              "Abort. Return to menu Settings...")
+                        settings_menu()
+                    else:
+                        if user_answer != "" and\
+                           int(user_answer) >= 0 and int(user_answer) < 60:
+
+                            end_minutes = obj_template.get_end_minutes()
+                            end_minutes.append(int(user_answer))
+                            obj_template.set_end_minutes(end_minutes)
+
+                            return obj_template
+                        else:
+                            print("COMPUTER [.. -> End time -> Minutes]: " +
+                                  "Error, check entered data. Retry query...")
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> End time -> Minutes]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        obj_template = Template()
+
+        i = 0
+        while i < count_intervals:
+            obj_template = input_begin_hour(i, obj_template)
+            obj_template = input_begin_minutes(i, obj_template)
+            obj_template = input_end_hour(i, obj_template)
+            obj_template = input_end_minutes(i, obj_template)
+            i += 1
+
+        time = obj_template.get_time()
+
+        loads_json = {}
+
+        i = 0
+        while i < len(time):
+            time_dict = {
+                "time": time[i],
+                "value": 0
+            }
+            loads_json = {
+                str(i): time_dict
+            }
+            i += 1
+
+        write_json("Settings", PATH + "", "template", loads_json)
+
+    def new_template():
+
+        try:
+
+            print("COMPUTER [.. -> New template]: " +
+                  "Enter count of new intervals.")
+
+            user_answer = raw_input("USER [.. -> New template -> " +
+                                    "Count of intervals]: (1-24/00) ")
+
+            if user_answer == "00":
+                print("COMPUTER [.. -> New template -> Count of intervals]: " +
+                      "Abort. Return to menu Settings...")
+                settings_menu()
+            else:
+                if user_answer != "" and\
+                   int(user_answer) > 0 and int(user_answer) < 25:
+                    create_template(int(user_answer))
+                else:
+                    print("COMPUTER [.. -> New template -> " +
+                          "Count of intervals]: " +
+                          "Error, check entered data. Retry query...")
+                    new_template()
+
+        except Exception as var_except:
+            print("COMPUTER [.. -> New template]: Error, " +
+                  str(var_except) +
+                  ". Return to Main menu...")
+            main_menu()
+
+    def show_template():
+
+        def export_template_query(text_output):
+
+            try:
+                print("\nCOMPUTER [.. -> Show template -> Export]: " +
+                      "Export log to text file?")
+                user_answer = raw_input("USER [.. -> Show template -> " +
+                                        "Export]: (1/0) ")
+
+                if user_answer == "0":
+                    show_menu()
+                else:
+                    if user_answer == "1":
+
+                        write_text("Show template -> Export", PATH +
+                                   "output/", "template", text_output)
+                    else:
+                        print("COMPUTER [.. -> Show template -> Export]: " +
+                              "Error, check entered data. Retry query...")
+                        export_template_query(text_output)
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> Show template -> Export]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        def export_template():
+            try:
+
+                loads_json = read_json("Show template", PATH +
+                                       "", "template")
+
+                text_output = "[day month - dayweek]"
+
+                i = len(loads_json) - 1
+                while i >= 0:
+                    text_output += "\n" + str(loads_json[str(i)]["time"])
+                    text_output += " (" + str(loads_json[str(i)]["value"]) +\
+                        ")"
+                    i -= 1
+
+                print("\n" + text_output)
+
+                export_template_query(text_output)
+
+            except Exception as var_except:
+                print("COMPUTER [.. -> Show template]: Error, " +
+                      str(var_except) +
+                      ". Return to Main menu...")
+                main_menu()
+
+        export_template()
+
+    print("\nCOMPUTER [.. -> Settings]: You are in menu Settings.")
+    print("COMPUTER [.. -> Settings]: Enter digit for next action.")
+    print("COMPUTER [.. -> Settings]: 1 == Create new template.")
+    print("COMPUTER [.. -> Settings]: 2 == Show exist template.")
+    print("COMPUTER [.. -> Settings]: 0 == Step back.")
+
+    user_answer = raw_input("USER [Main menu]: (1-2/0) ")
+
+    if user_answer == "0":
+        main_menu()
+    else:
+        if user_answer == "1":
+            new_template()
+        else:
+            if user_answer == "2":
+                show_template()
+            else:
+                print("COMPUTER [.. -> Settings]: Unknown command. " +
+                      "Retry query...")
+                settings_menu()
+
     print("\nCOMPUTER [.. -> Settings]: You are in menu of settings.")
 
     # temporary
