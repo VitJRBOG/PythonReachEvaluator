@@ -45,12 +45,21 @@ class Day:
 
 def starter():
     try:
-        if os.path.exists("output") is False:
-            os.mkdir("output")
+
+        if os.path.exists("path.txt") is False:
+            file_text = open("path.txt", "w")
+            file_text.write("")
+            file_text.close()
+            print("COMPUTER: Was created file \"path.txt\".")
+
+        path = str(open("path.txt", "r").read())
+
+        if os.path.exists(path + "output") is False:
+            os.mkdir(str(path) + "output")
             print("COMPUTER: Was created directory \"output\".")
 
-        if os.path.exists("json") is False:
-            os.mkdir("json")
+        if os.path.exists(path + "json") is False:
+            os.mkdir(str(path) + "json")
             print("COMPUTER: Was created directory \"json\".")
 
     except Exception as var_except:
@@ -58,6 +67,22 @@ def starter():
             "COMPUTER: Error, " + str(var_except) + ". Exit from program...")
         exit()
     main_menu()
+
+
+def read_path_txt():
+    try:
+        path = str(open("path.txt", "r").read())
+
+        if path[len(path) - 1] != "/":
+            path += "/"
+
+        return path
+
+    except Exception as var_except:
+        print(
+            "COMPUTER [.. -> Read \"path.txt\"]: Error, " + str(var_except) +
+            ". Return to Main menu...")
+        main_menu()
 
 
 def read_json(sender, path, file_name):
@@ -145,6 +170,8 @@ def main_menu():
 
 
 def add_menu():
+
+    PATH = read_path_txt()
 
     def enter_date(obj_day):
         print("COMPUTER [.. -> New data]: " +
@@ -372,7 +399,7 @@ def add_menu():
                 "coverage": obj_day.get_coverage()
             }
 
-            write_json("Make JSON", "json/", file_name, loads_json)
+            write_json("Make JSON", PATH + "json/", file_name, loads_json)
 
         except Exception as var_except:
             print(
@@ -383,7 +410,7 @@ def add_menu():
 
     print("\nCOMPUTER [.. -> New data]: You are in menu of add new data.")
 
-    if os.path.exists("template.json") is False:
+    if os.path.exists(PATH + "template.json") is False:
         print("COMPUTER [.. -> New data]: " +
               "File \"template.json\" is not exist. Check " +
               "Menu settings.")
@@ -391,7 +418,7 @@ def add_menu():
         main_menu()
     else:
         obj_day = Day()
-        loads_json = read_json("New data", "", "template")
+        loads_json = read_json("New data", PATH + "", "template")
         obj_day = enter_date(obj_day)
         obj_day = check_intervals(obj_day, loads_json)
         make_json_log(obj_day)
@@ -402,6 +429,8 @@ def add_menu():
 
 
 def show_menu():
+
+    PATH = read_path_txt()
 
     def export_query(sender, file_name, text_output):
 
@@ -415,7 +444,9 @@ def show_menu():
                 show_menu()
             else:
                 if user_answer == "1":
-                    write_text("All logs", "output/", file_name, text_output)
+
+                    write_text("All logs", PATH +
+                               "output/", file_name, text_output)
                 else:
                     print("COMPUTER [.. -> " + str(sender) +
                           " -> Make output -> Export]: " +
@@ -436,7 +467,7 @@ def show_menu():
                 pos = file_name.find(".json")
                 file_name = file_name[0:pos]
 
-                loads_json = read_json(sender, "json/", file_name)
+                loads_json = read_json(sender, PATH + "json/", file_name)
 
                 month = [
                     "января", "февраля", "марта",
@@ -723,7 +754,7 @@ def show_menu():
                       ". Return to Main menu...")
                 main_menu()
 
-        list_files = os.listdir("json/")
+        list_files = os.listdir(PATH + "json/")
 
         dict_by_month = sort_files(list_files)
 
@@ -821,10 +852,12 @@ def settings_menu():
 
 def evaluate_menu():
 
+    PATH = read_path_txt()
+
     def collect_files(sender):
         try:
 
-            list_files = os.listdir("json/")
+            list_files = os.listdir(PATH + "json/")
 
             list_logs = []
 
@@ -833,7 +866,7 @@ def evaluate_menu():
 
                 pos = list_files[i].find(".json")
 
-                loads_json = read_json("Evaluate", "json/",
+                loads_json = read_json("Evaluate", PATH + "json/",
                                        list_files[i][0:pos])
 
                 obj_day = Day()
@@ -868,7 +901,8 @@ def evaluate_menu():
                     "sun"
                 ]
 
-                log_template = read_json("Calculate coverage", "", "template")
+                log_template = read_json("Calculate coverage", PATH +
+                                         "", "template")
 
                 list_result_sum = {
                     "mon": copy.deepcopy(log_template),
@@ -1113,7 +1147,8 @@ def evaluate_menu():
                 evaluate_menu()
             else:
                 if user_answer == "1":
-                    write_text(sender, "output/", file_name, text_output)
+                    write_text(sender, PATH +
+                               "output/", file_name, text_output)
                 else:
                     print("COMPUTER [.. -> Evaluate -> " +
                           str(sender) +
