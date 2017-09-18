@@ -227,7 +227,7 @@ def write_text(sender, path, file_name, text_output):
 
 def main_menu():
     print("\nCOMPUTER [Main menu]: You are in Main menu.")
-    print("COMPUTER [Main menu]: Enter digit for next action. (1-4/0)")
+    print("COMPUTER [Main menu]: Enter digit for next action.")
     print("COMPUTER [Main menu]: 1 == Add new data about reach.")
     print("COMPUTER [Main menu]: 2 == Show data.")
     print("COMPUTER [Main menu]: 3 == Settings of intervals.")
@@ -500,7 +500,7 @@ def add_menu():
     if os.path.exists(PATH + "template.json") is False:
         print("COMPUTER [.. -> New data]: " +
               "File \"template.json\" is not exist. Check " +
-              "Menu settings.")
+              "menu Settings.")
         print("COMPUTER [.. -> New data]: Return to Main menu...")
         main_menu()
     else:
