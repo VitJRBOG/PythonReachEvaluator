@@ -611,11 +611,19 @@ def show_menu():
 
         def print_to_console(sender, list_files):
             try:
+
                 user_answer = ""
                 count = 0
 
                 if sender == "All logs":
                     print("\n")
+
+                    if len(list_files) < 1:
+                        print("COMPUTER [.. -> Show files -> " +
+                              str(sender) + "]: Folder \"json\" is empty. " +
+                              "Return to Show menu.")
+                        show_menu()
+
                     i = 0
                     while i < len(list_files):
                         print("[" + str(i + 1) + "] " + str(list_files[i]))
@@ -631,9 +639,16 @@ def show_menu():
                     ]
 
                     print("\n")
+
+                    if len(list_files) < 1:
+                        print("COMPUTER [.. -> Show files -> " +
+                              str(sender) + "]: Folder \"json\" is empty. " +
+                              "Return to Show menu.")
+                        show_menu()
+
                     i = 0
-                    while i < len(day_week):
-                        print("[" + str(i + 1) + "] " + str(day_week[i]))
+                    while i < len(day_week_ru):
+                        print("[" + str(i + 1) + "] " + str(day_week_ru[i]))
                         i += 1
 
                     print("\nCOMPUTER [.. -> Show files -> " +
@@ -641,7 +656,7 @@ def show_menu():
                           "Select day of the week, or exit to Show menu.")
                     user_answer = raw_input("USER [.. -> " + str(sender) +
                                             "] " +
-                                            "(1-" + str(len(day_week)) +
+                                            "(1-" + str(len(day_week_ru)) +
                                             "/0) ")
 
                     user_answer = re.sub("[^0123456789\.]", "", user_answer)
@@ -670,10 +685,24 @@ def show_menu():
                                           str(list_files[i]))
                                     count += 1
                                 i += 1
+                            if count < 1:
+                                print("COMPUTER [.. -> Show files -> " +
+                                      str(sender) +
+                                      "]: Logs for " +
+                                      str(day_week_ru[int(user_answer) - 1]) +
+                                      " are absent. " +
+                                      "Return to Show menu.")
+                                show_menu()
+                        else:
+                            print("COMPUTER [.. -> Show files -> " +
+                                  str(sender) +
+                                  "]: " +
+                                  "Error, check entered data. Retry query...")
+                            print_to_console(sender, list_files)
 
                 if sender == "By months logs":
 
-                    month = [
+                    month_ru = [
                         "январь", "февраль", "март",
                         "апрель", "май", "июнь",
                         "июль", "август", "сентябрь",
@@ -681,9 +710,16 @@ def show_menu():
                     ]
 
                     print("\n")
+
+                    if len(list_files) < 1:
+                        print("COMPUTER [.. -> Show files -> " +
+                              str(sender) + "]: Folder \"json\" is empty. " +
+                              "Return to Show menu.")
+                        show_menu()
+
                     i = 0
-                    while i < len(month):
-                        print("[" + str(i + 1) + "] " + str(month[i]))
+                    while i < len(month_ru):
+                        print("[" + str(i + 1) + "] " + str(month_ru[i]))
                         i += 1
 
                     print("\nCOMPUTER [.. -> Show files -> " +
@@ -691,7 +727,7 @@ def show_menu():
                           "Select month, or exit to Show menu.")
                     user_answer = raw_input("USER [.. -> " + str(sender) +
                                             "] " +
-                                            "(1-" + str(len(month)) +
+                                            "(1-" + str(len(month_ru)) +
                                             "/0) ")
 
                     user_answer = re.sub("[^0123456789\.]", "", user_answer)
@@ -721,6 +757,20 @@ def show_menu():
                                           str(list_files[i]))
                                     count += 1
                                 i += 1
+                            if count < 1:
+                                print("COMPUTER [.. -> Show files -> " +
+                                      str(sender) +
+                                      "]: Logs for " +
+                                      str(month_ru[int(user_answer) - 1]) +
+                                      " are absent. " +
+                                      "Return to Show menu.")
+                                show_menu()
+                        else:
+                            print("COMPUTER [.. -> Show files -> " +
+                                  str(sender) +
+                                  "]: " +
+                                  "Error, check entered data. Retry query...")
+                            print_to_console(sender, list_files)
 
                 print("\nCOMPUTER [.. -> Show files -> " +
                       str(sender) + "]: " +
