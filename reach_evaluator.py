@@ -4,6 +4,7 @@
 import os
 import json
 import copy
+import re
 
 
 class Day:
@@ -236,6 +237,8 @@ def main_menu():
 
     user_answer = raw_input("USER [Main menu]: (1-4/0) ")
 
+    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
     if user_answer == "0":
         close_program()
     else:
@@ -272,6 +275,8 @@ def add_menu():
                     user_answer = raw_input("USER [.. -> New data -> " +
                                             "Day number]: (1-28/29/30/31/00) ")
 
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "00":
                         print("COMPUTER [.. -> " +
                               "New data -> Day number] Abort. " +
@@ -300,6 +305,8 @@ def add_menu():
                 while True:
                     user_answer = raw_input("USER [.. -> New data -> " +
                                             "Number of month]: (1-12/00) ")
+
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
                     if user_answer == "00":
                             print("COMPUTER [.. -> New data -> " +
@@ -331,6 +338,8 @@ def add_menu():
                     user_answer = raw_input("USER [.. -> New data -> " +
                                             "Day week]: " +
                                             "1-7/00 ")
+
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
                     if user_answer == "00":
                             print("COMPUTER [.. -> New data -> Day week] " +
@@ -388,6 +397,8 @@ def add_menu():
                                     str(interval["time"]) +
                                     "]: (1-10/00) ")
 
+            user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
             if user_answer == "00":
                 print("COMPUTER [.. -> New data -> Posts amount]: Abort. " +
                       "Return to Main menu...")
@@ -433,6 +444,8 @@ def add_menu():
                 user_answer = raw_input("USER [.. -> " + str(interval_time) +
                                         " -> Post coverage №" +
                                         str(post_number) + "]: ")
+
+                user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
                 if user_answer != "" and int(user_answer) > 999:
 
@@ -526,6 +539,8 @@ def show_menu():
                   " -> Make output -> Export]: Export log to text file?")
             user_answer = raw_input("USER [.. -> " + str(sender) +
                                     " -> Make output -> Export]: (1/0) ")
+
+            user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
             if user_answer == "0":
                 show_menu()
@@ -629,6 +644,8 @@ def show_menu():
                                             "(1-" + str(len(day_week)) +
                                             "/0) ")
 
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "0":
                         show_menu()
                     else:
@@ -677,6 +694,8 @@ def show_menu():
                                             "(1-" + str(len(month)) +
                                             "/0) ")
 
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "0":
                         show_menu()
                     else:
@@ -711,6 +730,8 @@ def show_menu():
                                         "] (1-" +
                                         str(count) +
                                         "/0) ")
+
+                user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
                 if user_answer == "0":
                     show_menu()
@@ -908,6 +929,8 @@ def show_menu():
 
     user_answer = raw_input("USER [.. -> Show data]: (1-3/0) ")
 
+    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
     if user_answer == "0":
         main_menu()
     else:
@@ -941,6 +964,9 @@ def settings_menu():
                                             "Interval №" + str(i + 1) +
                                             " -> Begin time " +
                                             "-> Hours]: (0-23/00) ")
+
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "00":
                         print("COMPUTER [.. -> Begin time -> Hours]: " +
                               "Abort. Return to menu Settings...")
@@ -974,6 +1000,9 @@ def settings_menu():
                                             "Interval №" + str(i + 1) +
                                             " -> Begin time " +
                                             "-> Minutes]: (0-59/00) ")
+
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "00":
                         print("COMPUTER [.. -> Begin time -> Minutes]: " +
                               "Abort. Return to menu Settings...")
@@ -1007,6 +1036,9 @@ def settings_menu():
                                             "Interval №" + str(i + 1) +
                                             " -> End time " +
                                             "-> Hours]: (0-59/00) ")
+
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "00":
                         print("COMPUTER [.. -> End time -> Hours]: " +
                               "Abort. Return to menu Settings...")
@@ -1040,6 +1072,9 @@ def settings_menu():
                                             "Interval №" + str(i + 1) +
                                             " -> End time " +
                                             "-> Minutes]: (0-59/00) ")
+
+                    user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
                     if user_answer == "00":
                         print("COMPUTER [.. -> End time -> Minutes]: " +
                               "Abort. Return to menu Settings...")
@@ -1100,6 +1135,8 @@ def settings_menu():
             user_answer = raw_input("USER [.. -> New template -> " +
                                     "Count of intervals]: (1-24/00) ")
 
+            user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
             if user_answer == "00":
                 print("COMPUTER [.. -> New template -> Count of intervals]: " +
                       "Abort. Return to menu Settings...")
@@ -1129,6 +1166,8 @@ def settings_menu():
                       "Export log to text file?")
                 user_answer = raw_input("USER [.. -> Show template -> " +
                                         "Export]: (1/0) ")
+
+                user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
                 if user_answer == "0":
                     show_menu()
@@ -1182,6 +1221,8 @@ def settings_menu():
     print("COMPUTER [.. -> Settings]: 0 == Step back.")
 
     user_answer = raw_input("USER [Main menu]: (1-2/0) ")
+
+    user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
     if user_answer == "0":
         main_menu()
@@ -1503,6 +1544,8 @@ def evaluate_menu():
             user_answer = raw_input("USER [.. -> Evaluate -> " + str(sender) +
                                     " -> Export]: (1/0) ")
 
+            user_answer = re.sub("[^0123456789\.]", "", user_answer)
+
             file_name = ""
 
             if sender == "Total":
@@ -1557,6 +1600,8 @@ def evaluate_menu():
         # temporary
 
     user_answer = raw_input("USER [.. -> Evaluate]: ")
+
+    user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
     if user_answer == "0":
         main_menu()
