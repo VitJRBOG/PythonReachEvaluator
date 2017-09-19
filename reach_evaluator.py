@@ -632,7 +632,7 @@ def show_menu():
 
                 if sender == "By days week logs":
 
-                    day_week = [
+                    day_week_ru = [
                         "понедельник", "вторник", "среда",
                         "четверг", "пятница", "суббота",
                         "воскресенье"
