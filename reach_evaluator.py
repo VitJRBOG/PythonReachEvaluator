@@ -664,8 +664,9 @@ def show_menu():
                     if user_answer == "0":
                         show_menu()
                     else:
-                        if int(user_answer) > 0 \
-                           and int(user_answer) <= len(day_week):
+                        if user_answer != "" and\
+                           int(user_answer) > 0 \
+                           and int(user_answer) <= len(day_week_ru):
 
                             day_week = [
                                 "mon", "tue", "wed",
@@ -735,8 +736,9 @@ def show_menu():
                     if user_answer == "0":
                         show_menu()
                     else:
-                        if int(user_answer) > 0 \
-                           and int(user_answer) <= len(month):
+                        if user_answer != "" and\
+                           int(user_answer) > 0 \
+                           and int(user_answer) <= len(month_ru):
 
                             month = [
                                 "jan", "feb", "mar",
@@ -786,7 +788,8 @@ def show_menu():
                 if user_answer == "0":
                     show_menu()
                 else:
-                    if int(user_answer) > 0 \
+                    if user_answer != "" and\
+                       int(user_answer) > 0 \
                        and int(user_answer) <= len(list_files):
                         make_output(sender, list_files[int(user_answer) - 1])
                     else:
