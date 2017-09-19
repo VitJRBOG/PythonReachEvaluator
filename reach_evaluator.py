@@ -140,7 +140,7 @@ def starter():
             file_text.close()
             print("COMPUTER: Was created file \"path.txt\".")
 
-        path = str(open("path.txt", "r").read())
+        path = read_path_txt()
 
         if os.path.exists(path + "output") is False:
             os.mkdir(str(path) + "output")
@@ -161,7 +161,7 @@ def read_path_txt():
     try:
         path = str(open("path.txt", "r").read())
 
-        if path[len(path) - 1] != "/":
+        if len(path) > 0 and path[len(path) - 1] != "/":
             path += "/"
 
         return path
@@ -780,7 +780,7 @@ def show_menu():
                 user_answer = raw_input("USER [.. -> " +
                                         str(sender) +
                                         "] (1-" +
-                                        str(count) +
+                                        str(len(list_files)) +
                                         "/0) ")
 
                 user_answer = re.sub("[^0123456789\.]", "", user_answer)
@@ -1216,14 +1216,14 @@ def settings_menu():
 
             try:
                 print("\nCOMPUTER [.. -> Show template -> Export]: " +
-                      "Export log to text file?")
+                      "Export template to text file?")
                 user_answer = raw_input("USER [.. -> Show template -> " +
                                         "Export]: (1/0) ")
 
                 user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
                 if user_answer == "0":
-                    show_menu()
+                    settings_menu()
                 else:
                     if user_answer == "1":
 
@@ -1289,16 +1289,6 @@ def settings_menu():
                 print("COMPUTER [.. -> Settings]: Unknown command. " +
                       "Retry query...")
                 settings_menu()
-
-    print("\nCOMPUTER [.. -> Settings]: You are in menu of settings.")
-
-    # temporary
-    print("COMPUTER [.. -> Settings]: ...")
-    print("COMPUTER [.. -> Settings]: Here is empty, return to Main menu.")
-    main_menu()
-    # temporary
-
-    print("COMPUTER [.. -> Settings]: Enter digit for next action.")
 
 
 def evaluate_menu():
