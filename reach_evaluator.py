@@ -1393,6 +1393,47 @@ def evaluate_menu():
                         list_result_sum[dw][sm]["value"] = int(coverage)
                         m += 1
                     i += 1
+
+            if sender == "Total":
+                log_template = read_json("Calculate coverage", PATH +
+                                         "", "template")
+
+                list_result_sum = copy.deepcopy(log_template)
+
+                count = 0
+                i = 0
+                while i < len(list_logs):
+                    if len(list_logs[i].get_coverage()) ==\
+                       len(list_result_sum):
+                        coverage = list_logs[i].get_coverage()
+                        count += 1
+                        n = 0
+                        while n < len(list_result_sum):
+                            sn = str(n)  # because many symbols next ln
+                            list_result_sum[sn]["value"] +=\
+                                coverage[sn]["value"]
+                            coverage[sn]["value"] = 0
+                            n += 1
+                    else:
+                        print("COMPUTER [.. -> Evaluate -> " +
+                              str(sender) + "]: " +
+                              "Error, different lengths of " +
+                              "template of list and log. " +
+                              "Return to Main menu...")
+                        main_menu()
+                    i += 1
+                m = 0
+                while m < len(list_result_sum):
+                    sm = str(m)  # because many symbols in next line
+                    coverage = list_result_sum[sm]["value"]
+                    coverage = int(coverage) / int(count)
+                    coverage = float(coverage / 100)
+                    coverage = round(coverage)
+                    coverage = coverage * 100
+                    list_result_sum[sm]["value"] = int(coverage)
+                    m += 1
+                i += 1
+
             evaluate_coverage(sender, list_result_sum)
         except Exception as var_except:
             print("COMPUTER [.. -> Evaluate -> " +
@@ -1434,11 +1475,6 @@ def evaluate_menu():
 
     def evaluate_coverage(sender, list_result_sum):
         try:
-            day_week = [
-                "mon", "tue", "wed",
-                "thu", "fri", "sat",
-                "sun"
-            ]
 
             evaluate_status = [
                 "best", "good", "norm"
@@ -1489,28 +1525,51 @@ def evaluate_menu():
                 }
             }
 
-            list_result_evaluate = {
-                "mon": copy.deepcopy(list_evaluate),
-                "tue": copy.deepcopy(list_evaluate),
-                "wed": copy.deepcopy(list_evaluate),
-                "thu": copy.deepcopy(list_evaluate),
-                "fri": copy.deepcopy(list_evaluate),
-                "sat": copy.deepcopy(list_evaluate),
-                "sun": copy.deepcopy(list_evaluate)
-            }
+            if sender == "For each days":
 
-            i = 0
-            while i < len(day_week):
-                dw = day_week[i]
-                coverage = copy.deepcopy(list_result_sum[day_week[i]])
-                j = 0
-                while j < len(evaluate_status):
-                    es = evaluate_status[j]
-                    status = copy.deepcopy(list_result_evaluate[dw][es])
+                day_week = [
+                    "mon", "tue", "wed",
+                    "thu", "fri", "sat",
+                    "sun"
+                ]
+
+                list_result_evaluate = {
+                    "mon": copy.deepcopy(list_evaluate),
+                    "tue": copy.deepcopy(list_evaluate),
+                    "wed": copy.deepcopy(list_evaluate),
+                    "thu": copy.deepcopy(list_evaluate),
+                    "fri": copy.deepcopy(list_evaluate),
+                    "sat": copy.deepcopy(list_evaluate),
+                    "sun": copy.deepcopy(list_evaluate)
+                }
+
+                i = 0
+                while i < len(day_week):
+                    dw = day_week[i]
+                    coverage = copy.deepcopy(list_result_sum[day_week[i]])
+                    j = 0
+                    while j < len(evaluate_status):
+                        es = evaluate_status[j]
+                        status = copy.deepcopy(list_result_evaluate[dw][es])
+                        status = algorithm_evaluate(sender, status, coverage)
+                        j += 1
+                        list_result_evaluate[dw][es] = copy.deepcopy(status)
+                    i += 1
+
+            if sender == "Total":
+                list_result_evaluate = copy.deepcopy(list_evaluate)
+
+                coverage = copy.deepcopy(list_result_sum)
+
+                i = 0
+                while i < len(evaluate_status):
+                    es = evaluate_status[i]
+                    status = copy.deepcopy(list_result_evaluate[es])
                     status = algorithm_evaluate(sender, status, coverage)
-                    j += 1
-                    list_result_evaluate[dw][es] = copy.deepcopy(status)
-                i += 1
+
+                    list_result_evaluate[es] = copy.deepcopy(status)
+                    i += 1
+
             print_evaluate(sender, list_result_evaluate)
         except Exception as var_except:
             print("COMPUTER [.. -> Evaluate -> " +
@@ -1521,38 +1580,76 @@ def evaluate_menu():
 
     def print_evaluate(sender, list_result_evaluate):
         try:
-            day_week = [
-                "mon", "tue", "wed",
-                "thu", "fri", "sat",
-                "sun"
-            ]
+            if sender == "For each days":
 
-            day_week_ru = [
-                "Понедельник", "Вторник", "Среда",
-                "Четверг", "Пятница", "Суббота",
-                "Воскресенье"
-            ]
+                day_week = [
+                    "mon", "tue", "wed",
+                    "thu", "fri", "sat",
+                    "sun"
+                ]
 
-            evaluate_status = [
-                "best", "good", "norm"
-            ]
+                day_week_ru = [
+                    "Понедельник", "Вторник", "Среда",
+                    "Четверг", "Пятница", "Суббота",
+                    "Воскресенье"
+                ]
 
-            evaluate_status_ru = [
-                "Отличное время", "Хорошее время", "Нормальное время"
-            ]
+                evaluate_status = [
+                    "best", "good", "norm"
+                ]
 
-            text_output = ""
+                evaluate_status_ru = [
+                    "Отличное время", "Хорошее время", "Нормальное время"
+                ]
 
-            i = 0
-            while i < len(day_week):
-                text_output += "\n=== " + str(day_week_ru[i]) + " ===\n"
-                j = 0
-                while j < len(list_result_evaluate[day_week[i]]):
-                    dw = day_week[i]
-                    es = evaluate_status[j]
-                    status = list_result_evaluate[dw][es]
+                text_output = ""
+
+                i = 0
+                while i < len(day_week):
+                    text_output += "\n=== " + str(day_week_ru[i]) + " ===\n"
+                    j = 0
+                    while j < len(list_result_evaluate[day_week[i]]):
+                        dw = day_week[i]
+                        es = evaluate_status[j]
+                        status = list_result_evaluate[dw][es]
+                        text_output += "\n'''" +\
+                            str(evaluate_status_ru[j]) + ":''' "
+                        n = 0
+                        while n < len(status):
+                            time_output = ""
+                            k = 0
+                            while k < len(status[str(n)]["time"]):
+                                if k == len(status[str(n)]["time"]) - 1:
+                                    time_output += status[str(n)]["time"][k]
+                                else:
+                                    time_output += status[str(n)]["time"][k] +\
+                                        ", "
+                                k += 1
+                            text_output += "\n" + str(n + 1) + ") "
+                            text_output += str(time_output) + " ("
+                            text_output += str(status[str(n)]["value"]) + ")"
+                            n += 1
+                        text_output += "\n"
+                        j += 1
+                    i += 1
+
+            if sender == "Total":
+                evaluate_status = [
+                    "best", "good", "norm"
+                ]
+
+                evaluate_status_ru = [
+                    "Отличное время", "Хорошее время", "Нормальное время"
+                ]
+
+                text_output = ""
+
+                i = 0
+                while i < len(list_result_evaluate):
+                    es = evaluate_status[i]
+                    status = list_result_evaluate[es]
                     text_output += "\n'''" +\
-                        str(evaluate_status_ru[j]) + ":''' "
+                        str(evaluate_status_ru[i]) + ":''' "
                     n = 0
                     while n < len(status):
                         time_output = ""
@@ -1561,17 +1658,19 @@ def evaluate_menu():
                             if k == len(status[str(n)]["time"]) - 1:
                                 time_output += status[str(n)]["time"][k]
                             else:
-                                time_output += status[str(n)]["time"][k] + ", "
+                                time_output += status[str(n)]["time"][k] +\
+                                    ", "
                             k += 1
                         text_output += "\n" + str(n + 1) + ") "
                         text_output += str(time_output) + " ("
                         text_output += str(status[str(n)]["value"]) + ")"
                         n += 1
                     text_output += "\n"
-                    j += 1
-                i += 1
+                    i += 1
+
             print(str(text_output))
             export_evaluate(sender, text_output)
+
         except Exception as var_except:
             print("COMPUTER [.. -> Evaluate -> " +
                   str(sender) + " -> Print evaluate]: Error, " +
@@ -1595,8 +1694,6 @@ def evaluate_menu():
                 file_name = "evaluate_total"
             if sender == "For each days":
                 file_name = "evaluate_each_days"
-            if sender == "For selected days":
-                file_name = "evaluate_selected_days"
 
             if user_answer == "0":
                 evaluate_menu()
@@ -1619,28 +1716,16 @@ def evaluate_menu():
         evaluate_menu()
 
     print("\nCOMPUTER [.. -> Evaluate]: You are in menu of evaluate.")
-    print("COMPUTER [.. -> Evaluate]: Enter digit for next action. (1-3/0)")
+    print("COMPUTER [.. -> Evaluate]: Enter digit for next action. (1-2/0)")
     print("COMPUTER [.. -> Evaluate]: 1 == Total.")
     print("COMPUTER [.. -> Evaluate]: 2 == For each days.")
-    print("COMPUTER [.. -> Evaluate]: 3 == For select days.")
     print("COMPUTER [.. -> Evaluate]: 0 == Step back.")
 
     def evaluate_total():
-        # temporary
-        print("COMPUTER [.. -> Evaluate]: ...")
-        print("COMPUTER [.. -> Evaluate]: Here is empty, return to Main menu.")
-        main_menu()
-        # temporary
+        collect_files("Total")
 
     def evaluate_each():
         collect_files("For each days")
-
-    def evaluate_select():
-        # temporary
-        print("COMPUTER [.. -> Evaluate]: ...")
-        print("COMPUTER [.. -> Evaluate]: Here is empty, return to Main menu.")
-        main_menu()
-        # temporary
 
     user_answer = raw_input("USER [.. -> Evaluate]: ")
 
@@ -1655,12 +1740,9 @@ def evaluate_menu():
             if user_answer == "2":
                 evaluate_each()
             else:
-                if user_answer == "3":
-                    evaluate_select()
-                else:
-                    print("COMPUTER [.. -> Evaluate]: Unknown command. " +
-                          "Retry query...")
-                    evaluate_menu()
+                print("COMPUTER [.. -> Evaluate]: Unknown command. " +
+                      "Retry query...")
+                evaluate_menu()
 
 
 def close_program():
