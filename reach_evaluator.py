@@ -406,14 +406,42 @@ def add_menu():
             else:
                 if user_answer != "" and\
                    int(user_answer) > 0 and int(user_answer) < 11:
+                    post_amount = int(user_answer)
                     coverage = 0
                     i = 0
-                    while i < int(user_answer):
-                        coverage = coverage +\
-                            enter_coverage(interval["time"], i + 1)
-                        i += 1
+                    while i < post_amount:
 
-                    coverage = int(coverage) / int(user_answer)
+                        exit_from_cicle = False
+
+                        while True:
+                            user_answer = raw_input("USER [.. -> " +
+                                                    str(interval["time"]) +
+                                                    " -> Post coverage №" +
+                                                    str(i + 1) +
+                                                    "]: (****/0) ")
+
+                            user_answer = re.sub("[^0123456789\.]", "",
+                                                 user_answer)
+
+                            if user_answer == "0":
+                                exit_from_cicle = True
+                                break
+
+                            if user_answer != "" and int(user_answer) > 999:
+                                coverage = coverage +\
+                                    enter_coverage(interval["time"], i + 1,
+                                                   user_answer)
+                                i += 1
+                                break
+                            else:
+                                print("COMPUTER [.. -> Post coverage]: " +
+                                      "Error, check entered data. " +
+                                      " Retry query...")
+
+                        if exit_from_cicle:
+                            break
+
+                    coverage = int(coverage) / int(i)
 
                     coverage = float(coverage / 100)
 
@@ -435,31 +463,17 @@ def add_menu():
                 ". Return to Main menu...")
             main_menu()
 
-    def enter_coverage(interval_time, post_number):
+    def enter_coverage(interval_time, post_number, user_answer):
 
         try:
 
-            while True:
+            answer = float(float(user_answer) / 100)
 
-                user_answer = raw_input("USER [.. -> " + str(interval_time) +
-                                        " -> Post coverage №" +
-                                        str(post_number) + "]: ")
+            answer = round(answer)
 
-                user_answer = re.sub("[^0123456789\.]", "", user_answer)
+            answer = answer * 100
 
-                if user_answer != "" and int(user_answer) > 999:
-
-                    answer = float(float(user_answer) / 100)
-
-                    answer = round(answer)
-
-                    answer = answer * 100
-
-                    return int(answer)
-
-                else:
-                    print("COMPUTER [.. -> Post coverage]: " +
-                          "Error, check entered data. Retry query...")
+            return int(answer)
 
         except Exception as var_except:
             print(
