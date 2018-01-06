@@ -414,16 +414,23 @@ def add_menu():
                         exit_from_cicle = False
 
                         while True:
-                            user_answer = raw_input("USER [.. -> " +
-                                                    str(interval["time"]) +
-                                                    " -> Post coverage №" +
-                                                    str(i + 1) +
-                                                    "]: (****/0) ")
+                            if i > 0:
+                                user_answer = raw_input("USER [.. -> " +
+                                                        str(interval["time"]) +
+                                                        " -> Post coverage №" +
+                                                        str(i + 1) +
+                                                        "]: (****/0) ")
+                            if i <= 0:
+                                user_answer = raw_input("USER [.. -> " +
+                                                        str(interval["time"]) +
+                                                        " -> Post coverage №" +
+                                                        str(i + 1) +
+                                                        "]: (****) ")
 
                             user_answer = re.sub("[^0123456789\.]", "",
                                                  user_answer)
 
-                            if user_answer == "0":
+                            if user_answer == "0" and i > 0:
                                 exit_from_cicle = True
                                 break
 
