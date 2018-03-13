@@ -5,6 +5,9 @@ import os
 import json
 import copy
 import re
+import vk_api
+import time
+import datetime
 
 
 class Day:
@@ -230,33 +233,32 @@ def main_menu():
     print("\nCOMPUTER [Main menu]: You are in Main menu.")
     print("COMPUTER [Main menu]: Enter digit for next action.")
     print("COMPUTER [Main menu]: 1 == Add new data about reach.")
-    print("COMPUTER [Main menu]: 2 == Show data.")
-    print("COMPUTER [Main menu]: 3 == Settings of intervals.")
-    print("COMPUTER [Main menu]: 4 == Evaluate.")
+    print("COMPUTER [Main menu]: 2 == Reach collector.")
+    print("COMPUTER [Main menu]: 3 == Show data.")
+    print("COMPUTER [Main menu]: 4 == Settings of intervals.")
+    print("COMPUTER [Main menu]: 5 == Evaluate.")
     print("COMPUTER [Main menu]: 0 == Close the program.")
 
-    user_answer = raw_input("USER [Main menu]: (1-4/0) ")
+    user_answer = raw_input("USER [Main menu]: (1-5/0) ")
 
     user_answer = re.sub("[^0123456789\.]", "", user_answer)
 
     if user_answer == "0":
         close_program()
+    elif user_answer == "1":
+        add_menu()
+    elif user_answer == "2":
+        reach_collector()
+    elif user_answer == "3":
+        show_menu()
+    elif user_answer == "4":
+        settings_menu()
+    elif user_answer == "5":
+        evaluate_menu()
     else:
-        if user_answer == "1":
-            add_menu()
-        else:
-            if user_answer == "2":
-                show_menu()
-            else:
-                if user_answer == "3":
-                    settings_menu()
-                else:
-                    if user_answer == "4":
-                        evaluate_menu()
-                    else:
-                        print("COMPUTER [Main menu]: Unknown command. " +
-                              "Retry query...")
-                        main_menu()
+        print("COMPUTER [Main menu]: Unknown command. " +
+              "Retry query...")
+        main_menu()
 
 
 def add_menu():
@@ -547,6 +549,243 @@ def add_menu():
         print("COMPUTER [.. - New data] Something wrong. " +
               "Return to Main menu...")
         main_menu()
+
+
+def reach_collector():
+    def authorize(sender, access_token):
+        sender += " -> Authorize"
+
+        vk_session = vk_api.VkApi(token=access_token)
+        vk_session._auth_token()
+
+        return vk_session
+
+    def get_posts(sender, vk_session, owner_id):
+        sender += " -> Get posts"
+
+        values = {
+            "owner_id": owner_id,
+            "count": 100,
+            "filter": "post"
+        }
+
+        response = vk_session.method("wall.get", values)
+
+        return response["items"]
+
+    def selection_post(sender, str_date, posts):
+        sender += " -> Selection post"
+
+        UNIX_MINUTE = 60
+
+        if str_date.find("-") != -1:
+            date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date, '%d-%m-%Y')))
+        elif str_date.find(".") != -1:
+            date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date, '%d.%m.%Y')))
+        else:
+            print("COMPUTER [" + sender + "]: Error. Check entered date.")
+
+        unix_date = int(time.mktime(date.timetuple()))
+
+        begin_of_day = unix_date - UNIX_MINUTE * 10
+        end_of_day = begin_of_day + UNIX_MINUTE * 60 * 24
+
+        posts_per_day = []
+
+        # i = len(posts) - 1
+        i = 0
+
+        while i < len(posts):
+            if posts[i]["date"] >= begin_of_day and\
+              posts[i]["date"] < end_of_day:
+                posts_per_day.append(copy.deepcopy(posts[i]))
+
+            i += 1
+
+        return posts_per_day
+
+    def get_reach(sender, vk_session, owner_id, post_id):
+        sender += " -> Get reach"
+
+        values = {
+            "owner_id": owner_id,
+            "post_id": post_id
+        }
+
+        response = vk_session.method("stats.getPostReach", values)
+
+        return response[0]
+
+    def sort_by_time(sender, posts_reach, template, str_date):
+        sender += " -> Sort by time"
+
+        log = copy.deepcopy(template)
+
+        UNIX_MINUTE = 60
+
+        i = 0
+
+        while i < len(log):
+
+            str_time_begin = log[str(i)]["time"][:5]
+            str_date_begin = str_date + " " + str_time_begin
+            if str_date.find("-") != -1:
+                date_begin = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date_begin, '%d-%m-%Y %H:%M')))
+            elif str_date.find(".") != -1:
+                date_begin = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date_begin, '%d.%m.%Y %H:%M')))
+            else:
+                print("COMPUTER [" + sender + "]: Error. Check entered date.")
+            unix_date_begin = int(time.mktime(date_begin.timetuple()))
+
+            str_time_end = log[str(i)]["time"][6:]
+            str_date_end = str_date + " " + str_time_end
+            if str_date.find("-") != -1:
+                date_end = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date_end, '%d-%m-%Y %H:%M')))
+            elif str_date.find(".") != -1:
+                date_end = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date_end, '%d.%m.%Y %H:%M')))
+            else:
+                print("COMPUTER [" + sender + "]: Error. Check entered date.")
+            unix_date_end = int(time.mktime(date_end.timetuple()))
+
+            begin_of_interval = unix_date_begin - UNIX_MINUTE * 10
+            end_of_interval = unix_date_end - UNIX_MINUTE * 10
+
+            if str_time_end == "00:00":
+                end_of_interval += UNIX_MINUTE * 60 * 24
+
+            count = 0
+            reach = 0
+
+            j = 0
+
+            while j < len(posts_reach):
+
+                if posts_reach[j]["date"] >= begin_of_interval and\
+                   posts_reach[j]["date"] < end_of_interval:
+
+                    count += 1
+
+                    reach += posts_reach[j]["reach"]
+
+                j += 1
+
+            if count > 1:
+                reach = reach / count
+
+            reach = int(round(float(reach) / 100)) * 100
+
+            log[str(i)]["value"] = reach
+
+            i += 1
+
+        return log
+
+    def create_log(sender, str_date, log):
+        if str_date.find("-") != -1:
+            date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date, '%d-%m-%Y')))
+        elif str_date.find(".") != -1:
+            date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date, '%d.%m.%Y')))
+        else:
+            print("COMPUTER [" + sender + "]: Error. Check entered date.")
+
+        weekday = date.isoweekday()
+        day = int(datetime.datetime.strftime(date, '%d'))
+        month = int(datetime.datetime.strftime(date, '%m'))
+
+        loads_json = {
+            "day_number": day,
+            "month_number": month,
+            "day_week": weekday,
+            "coverage": log
+        }
+
+        return loads_json
+
+    def set_filename(sender, str_date):
+        sender += " -> Set file name"
+
+        if str_date.find("-") != -1:
+            date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date, '%d-%m-%Y')))
+        elif str_date.find(".") != -1:
+            date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(str_date, '%d.%m.%Y')))
+        else:
+            print("COMPUTER [" + sender + "]: Error. Check entered date.")
+
+        name_weekday = [
+            "mon", "tue", "wed",
+            "thu", "fri", "sat",
+            "sun"
+        ]
+
+        name_month = [
+            "jan", "feb", "mar",
+            "apr", "may", "jun",
+            "jul", "aug", "sep",
+            "oct", "nov", "dec"
+        ]
+
+        weekday = date.isoweekday()
+        day = int(datetime.datetime.strftime(date, '%d'))
+        month = int(datetime.datetime.strftime(date, '%m'))
+
+        file_name = "log_" + str(day) + "-" +\
+                    name_month[month - 1] + "-" +\
+                    name_weekday[weekday - 1]
+
+        return file_name
+
+    sender = "Main"
+
+    PATH = read_path_txt()
+
+    access_token = raw_input("USER [" + sender + " -> New token]: ")
+
+    vk_session = authorize(sender, access_token)
+
+    owner_id = raw_input("USER [" + sender + " -> Public id]: ")
+
+    if owner_id[0] != "-":
+        owner_id = "-" + owner_id
+
+    posts = get_posts(sender, vk_session, owner_id)
+
+    str_date = raw_input("USER [" + sender + " -> Date]: ")
+
+    posts_per_day = selection_post(sender, str_date, posts)
+
+    posts_reach = []
+
+    i = len(posts_per_day) - 1
+
+    while i >= 0:
+        owner_id = posts_per_day[i]["owner_id"]
+        post_id = posts_per_day[i]["id"]
+
+        reach = copy.deepcopy(get_reach(sender, vk_session, owner_id, post_id))
+        date = posts_per_day[i]["date"]
+
+        post = {
+            "reach": reach["reach_subscribers"],
+            "date": date
+        }
+
+        posts_reach.append(copy.deepcopy(post))
+
+        print(str(i) + "/" + str(len(posts_per_day) - 1))
+
+        i -= 1
+
+    template = read_json(sender, PATH, "template")
+
+    log = copy.deepcopy(sort_by_time(sender, posts_reach, template, str_date))
+
+    file_name = set_filename(sender, str_date)
+
+    loads_json = create_log(sender, str_date, log)
+
+    write_json(sender, PATH + "json/", file_name, loads_json)
+
+    main_menu()
 
 
 def show_menu():
@@ -1628,13 +1867,12 @@ def evaluate_menu():
                 i = 0
                 while i < len(day_week):
                     text_output += "\n=== " + str(day_week_ru[i]) + " ===\n"
+                    time_range = 1
                     j = 0
                     while j < len(list_result_evaluate[day_week[i]]):
                         dw = day_week[i]
                         es = evaluate_status[j]
                         status = list_result_evaluate[dw][es]
-                        text_output += "\n'''" +\
-                            str(evaluate_status_ru[j]) + ":''' "
                         n = 0
                         while n < len(status):
                             time_output = ""
@@ -1646,12 +1884,17 @@ def evaluate_menu():
                                     time_output += status[str(n)]["time"][k] +\
                                         ", "
                                 k += 1
-                            text_output += "\n" + str(n + 1) + ") "
+
+                            text_output += "\n"
+                            text_output += str(time_range) + ") "
                             text_output += str(time_output) + " ("
                             text_output += str(status[str(n)]["value"]) + ")"
+
+                            time_range += 1
+
                             n += 1
-                        text_output += "\n"
                         j += 1
+                    text_output += "\n"
                     i += 1
 
             if sender == "Total":
@@ -1665,12 +1908,12 @@ def evaluate_menu():
 
                 text_output = ""
 
+                time_range = 1
+
                 i = 0
                 while i < len(list_result_evaluate):
                     es = evaluate_status[i]
                     status = list_result_evaluate[es]
-                    text_output += "\n'''" +\
-                        str(evaluate_status_ru[i]) + ":''' "
                     n = 0
                     while n < len(status):
                         time_output = ""
@@ -1682,9 +1925,12 @@ def evaluate_menu():
                                 time_output += status[str(n)]["time"][k] +\
                                     ", "
                             k += 1
-                        text_output += "\n" + str(n + 1) + ") "
+                        text_output += "\n" + str(time_range) + ") "
                         text_output += str(time_output) + " ("
                         text_output += str(status[str(n)]["value"]) + ")"
+
+                        time_range += 1
+
                         n += 1
                     text_output += "\n"
                     i += 1
