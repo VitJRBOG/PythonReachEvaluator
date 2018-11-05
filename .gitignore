@@ -1,4 +1,8 @@
+/.DS_Store
+/.vscode
+/junk
+*.pyc
+path.txt
+/res
 /json
 /output
-template.json
-path.txt
