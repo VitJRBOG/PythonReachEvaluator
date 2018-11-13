@@ -23,10 +23,12 @@ def main_menu():
             print(output)
         output = "COMPUTER [Main menu]: 00 == Quit"
         print(output)
+        return len(actions)
     
-    def check_user_answer():
+    def check_user_answer(number_actions):
         u"""Проверка ответа пользователя."""
-        user_answer = raw_input("USER [Main menu]: (1-3/00) ")
+        user_answer = raw_input(
+            "USER [Main menu]: (1-" + str(number_actions) + "/00) ")
         if user_answer == "00":
             print("COMPUTER: Quit...")
             exit(0)
@@ -38,9 +40,9 @@ def main_menu():
             run_evaluation_result_export()
         else:
             print("COMPUTER: Error. Pleace, repeat input.")
-            return check_user_answer()
-    output_actions()
-    check_user_answer()
+            return check_user_answer(number_actions)
+    number_actions = output_actions()
+    check_user_answer(number_actions)
 
 
 def run_collection_reach():
