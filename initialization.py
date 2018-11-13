@@ -39,9 +39,9 @@ def check_path():
         create_path(PATH, "json/ads")
 
     if os.path.exists(PATH + "res/template.json") is not True:
-        message = "File \"template.json\" is not exist."
+        message = "Res-file \"template.json\" is not initialized."
         output_data.show_data_to_console(message)
     
     if os.path.exists(PATH + "res/data.json") is not True:
-        message = "File \"data.json\" is not exist."
+        message = "Res-file \"data.json\" is not initialized."
         output_data.show_data_to_console(message)

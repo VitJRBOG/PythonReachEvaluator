@@ -17,8 +17,17 @@ def authorization(access_token):
     return vk_session
 
 
-def run_collecting_data(vk_session, public_url, str_target_date):
+def run_collecting_data(vk_session, str_target_date):
     u"""Сбор данных по охвату постов."""
+    def select_public_url():
+        u"""Извлекает из файла url паблика."""
+        public_url = ""
+        PATH = data_manager.read_path()
+        data = data_manager.read_json(PATH + "res/", "data")
+        public_url = data["public_url"]
+
+        return public_url
+
     def select_public_domain(public_url):
         u"""Извлекает домайн из ссылки на сообщество ВК."""
         underline_for_find = "vk.com/"
@@ -66,6 +75,7 @@ def run_collecting_data(vk_session, public_url, str_target_date):
         log_reach = insert_date_to_log(log_reach, ts_target_date)
         output_data.export_data_to_file(log_reach, type_posts)
 
+    public_url = select_public_url()
     public_domain = select_public_domain(public_url)
     public_id = get_public_id(vk_session, public_domain)
     ts_target_date = str_date_to_timestamp(str_target_date, "%d-%m-%Y")
