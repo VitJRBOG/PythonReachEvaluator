@@ -192,15 +192,31 @@ def evaluate(type_posts):
             u"""Формирует выходной текст из значений за день недели."""
             text_output_by_weekday = ""
 
-            for i, item in enumerate(values["values"]):
-                text_output_by_weekday += str(i + 1) + ") "
-                text_output_by_weekday += item["time_begin"] + "-" + \
-                    item["time_end"]
-                text_output_by_weekday += " (" + str(item["value"]) + ")"
-                text_output_by_weekday += " (" + str(item["post_count"]) + \
-                    ")\n"
-                if i == 8:
-                    break
+            list_values = []
+            for item in values["values"]:
+                if item["value"] > 0:
+                    if len(list_values) == 0:
+                        list_values.append(item["value"])
+                    else:
+                        i = len(list_values) - 1
+                        if item["value"] < list_values[i]:
+                            list_values.append(item["value"])
+
+            for i in range(9):
+                if i < len(list_values):
+                    time_intervals = ""
+                    for item in values["values"]:
+                        if item["value"] == list_values[i]:
+                            if len(time_intervals) > 0:
+                                time_intervals += ", "
+                            time_intervals += item["time_begin"] + "-" + item["time_end"]
+                    text_output_by_weekday += str(i + 1) + ") "
+                    text_output_by_weekday += time_intervals
+                    text_output_by_weekday += " (" + str(list_values[i]) + ")\n"
+                else:
+                    text_output_by_weekday += str(i + 1) + ") "
+                    text_output_by_weekday += "-"
+                    text_output_by_weekday += " (0)\n"
 
             return text_output_by_weekday
 
